@@ -10,16 +10,50 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+  type-check:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: check-out the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: 'npm'
-      - run: npm ci
-      - run: npm run type-check
-      - run: npm run build --if-present
+
+      - name: check types
+        run: npm run type-check
+
+  linter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check-out the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: run linter
+        run: npm run lint
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check-out the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: build (ci)
+        run: npm ci
